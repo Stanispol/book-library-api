@@ -1,11 +1,10 @@
-// src/routes/books.ts
 import { Router, Request, Response, NextFunction } from 'express';
 import { bookStorage } from '../storage/inMemory';
 import { CreateBookDto, Book, ErrorResponse } from '../types';
 
 const router = Router();
 
-// Вспомогательная функция валидации
+
 function validateCreateBookDto(dto: any): string | null {
   if (!dto || typeof dto !== 'object') {
     return 'Тело запроса должно быть объектом JSON';
@@ -19,12 +18,11 @@ function validateCreateBookDto(dto: any): string | null {
     return 'Поле price обязательно должно быть числом ≥ 0';
   }
 
-  // Можно добавить другие поля опционально, но пока только эти два правила
 
-  return null; // всё ок
+  return null; 
 }
 
-// GET /api/items — список всех книг
+
 router.get('/', (req: Request, res: Response) => {
   const books = bookStorage.getAll();
 
@@ -35,7 +33,7 @@ router.get('/', (req: Request, res: Response) => {
   });
 });
 
-// GET /api/items/:id — одна книга
+
 router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id as string;
   const book = bookStorage.getById(id);
@@ -54,7 +52,7 @@ router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-// POST /api/items — создание книги
+
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
   const dto: CreateBookDto = req.body;
 
@@ -75,7 +73,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
       requestId: req.requestId,
     });
   } catch (err) {
-    next(err); // если что-то сломалось внутри storage (маловероятно, но на будущее)
+    next(err); 
   }
 });
 

@@ -1,4 +1,3 @@
-// src/middleware/errorHandler.ts
 import { Request, Response, NextFunction } from 'express';
 import { ErrorResponse } from '../types';
 
@@ -8,14 +7,14 @@ export function errorHandler(
   res: Response,
   next: NextFunction
 ) {
-  // Если заголовки уже отправлены — передаём дальше (редкий случай)
+
   if (res.headersSent) {
     return next(err);
   }
 
   const requestId = req.requestId || 'unknown';
 
-  // Определяем, что это уже наш кастомный объект ошибки
+
   if (err && typeof err === 'object' && 'code' in err && 'message' in err) {
     const typedError = err as ErrorResponse & { status?: number };
 
@@ -31,7 +30,6 @@ export function errorHandler(
     return;
   }
 
-  // Если обычная ошибка (throw new Error(...))
   const status = 500;
   const message = err?.message || 'Неизвестная ошибка';
 
@@ -42,7 +40,7 @@ export function errorHandler(
     requestId,
   };
 
-  console.error(`[${requestId}] Error:`, err); // логируем полную ошибку в консоль
+  console.error(`[${requestId}] Error:`, err); 
 
   res.status(status).json(response);
 }

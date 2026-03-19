@@ -1,4 +1,3 @@
-// src/storage/inMemory.ts
 import { randomUUID } from 'crypto';
 import { Book, CreateBookDto } from '../types';
 
@@ -6,7 +5,7 @@ export class InMemoryBookStorage {
   private books: Book[] = [];
 
   getAll(): Book[] {
-    return [...this.books]; // возвращаем копию, чтобы никто не мутировал напрямую
+    return [...this.books]; 
   }
 
   getById(id: string): Book | undefined {
@@ -24,5 +23,4 @@ export class InMemoryBookStorage {
   }
 }
 
-// Создаём один экземпляр (singleton-подобный подход для простоты)
 export const bookStorage = new InMemoryBookStorage();
