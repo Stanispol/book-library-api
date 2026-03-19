@@ -1,0 +1,152 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Мини-библиотека книг API",
+    "description": "Простое API для хранения книг в памяти. Задание №1 по конвейеру обработки запросов.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Локальный сервер"
+    }
+  ],
+  "paths": {
+    "/api/items": {
+      "get": {
+        "summary": "Получить список всех книг",
+        "responses": {
+          "200": {
+            "description": "Список книг",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Book" }
+                    },
+                    "requestId": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Создать новую книгу",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateBookDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Книга создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "data": { "$ref": "#/components/schemas/Book" },
+                    "requestId": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Ошибка валидации",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/items/{id}": {
+      "get": {
+        "summary": "Получить книгу по ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "UUID книги"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Книга найдена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "data": { "$ref": "#/components/schemas/Book" },
+                    "requestId": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Книга не найдена",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Book": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "title": { "type": "string", "minLength": 3 },
+          "price": { "type": "number", "minimum": 0 },
+          "author": { "type": "string" },
+          "description": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["id", "title", "price", "createdAt"]
+      },
+      "CreateBookDto": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "minLength": 3 },
+          "price": { "type": "number", "minimum": 0 },
+          "author": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["title", "price"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "boolean" },
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "requestId": { "type": "string" }
+        },
+        "required": ["error", "code", "message", "requestId"]
+      }
+    }
+  }
+}
